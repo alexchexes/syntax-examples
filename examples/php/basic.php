@@ -10,8 +10,8 @@ final class Foo extends Bar Implements Baz
 {
     /** 
      * @var asd $asde
-     * @param int $foo Description
-     * @return Foo\Bar descr
+     * @param int $foo Description 
+     * @return Foo\Bar Description that mentions `foo` (or $foo) parameter
      * @param callable(Foo\Bar):int
      */
     private function __construct(
