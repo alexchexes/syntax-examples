@@ -1,24 +1,30 @@
 <?php declare(strict_types=1);
 
 /**
- * @phpstan-type TypeFoo 'foo'
+ * @phpstan-type TypeFoo 123 | 'foo'
  *  |'bar'
- *  | array{
+ *  | array<
  *    'foo'
  *    | 'bar'
  *    | 'baz'
  *    | 1 | 2 | 3
  *    | '{' | '}' // ha-ha, got you!
  *    | BAZ
+ *    | baz
  *    | Foo\Bar::BAZ
- *    | array { foo: int, bar: 'a' | 'b' | BAZ }
+ *    | array { foo: int, bar: 'a' | 'b' | BAZ | baz }
+ *    | array {
+ *      foo: int,
+ *      bar: 'a' | 'b' | BAZ | baz
+ *    }
  *    | int
- *  }
+ *  >
  *  |'baz'
  *  | 1 | 2 | 3
  *  | BAZ
+ *  | baz
  *  | Foo\Bar::BAZ
- *  |'qux' Is "|" a union operator? 
+ *  |'qux' Description of the TypeFoo where we say: Is | a union operator? 
  * 
  * @phpstan-import-type SomeType from Foo\Bar
  */
