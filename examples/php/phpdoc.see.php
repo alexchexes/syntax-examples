@@ -16,9 +16,14 @@ namespace PHP;
  * @see parentMethod
  * @see parentMethod
  * 
+ * Also see {@see \PHP\PhpDoc::foo()} and {@see PhpDoc::foo()}
+ * or {@see \PHP\PhpDoc::FOO} with {@see PhpDoc::FOO}),
+ * as well as {@see \PHP\PhpDoc::$bar} or {@see PhpDoc::$bar}
+ * or even {@see \PHP\Bar} or {@see Bar}.
+ * 
  * - also see this: {@see http://example.com}
- * - also see {@see http://example.com this}
- * - also see {@link http://example.com this}
+ * - and {@see http://example.com this}
+ * - and also {@link http://example.com this }
  * or see {@link Foo\Bar::fooBar()}
  * 
  * @phpstan-type pl_field 'id'
@@ -27,9 +32,13 @@ namespace PHP;
  * 
  * @phpstan-import-type SomeType from Foo\Bar
  */
-class PhpDoc{}
-
-
+class PhpDoc {
+    const FOO = 123;
+    private ?int $bar = null;
+    private function foo($arg): void {}
+    private function bar($arg): void {}
+}
+class Bar {}
 
 /**
  * class 1
