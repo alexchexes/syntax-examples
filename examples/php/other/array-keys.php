@@ -22,3 +22,7 @@ fn() => null;
 fn($a) => null;
 
 function my_fn () {}
+
+function t1($a = array('123' => 1)) {}
+
+function t2($a = array(my_fn() => 1)) {}
