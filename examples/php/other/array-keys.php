@@ -1,13 +1,11 @@
 <?php
 
-/*------------------------------*
-* SPECIFIC SCOPE FOR ARRAY KEYS *
-*-------------------------------*/
-
 $a = [
-    "key"   => 'value',
-    'key'   => 'value',
-    2       => 'value',
+    "key"       => 'value',
+    'key'       => 'value',
+    2           => 'value',
+    my_fn()     => 'value',
+    my_fn($a)   => 'value',
 ];
 
 function FunctionName($a) { 
@@ -21,3 +19,6 @@ function FunctionName($a) {
 }
 
 fn() => null;
+fn($a) => null;
+
+function my_fn () {}
