@@ -24,8 +24,10 @@ enum VisibilityDemo: string
     case PUBLIC = 'public';
     case PRIVATE = 'private';
     case PROTECTED = 'PROTECTED';
-    public const ALIAS1 = self::PUBLIC;
-    public const ALIAS2 = self::PRIVATE;
+    const ALIAS1 = self::PUBLIC;
+    const ALIAS2 = self::PRIVATE;
+    public const ALIAS3 = self::PUBLIC;
+    public const ALIAS4 = self::PRIVATE;
 }
 
 abstract class AbstractRecord
