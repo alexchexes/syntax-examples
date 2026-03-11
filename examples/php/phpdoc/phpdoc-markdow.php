@@ -32,5 +32,10 @@
  *   ```js
  *   const foo = bar.baz()
  *   ```
+ * 
+ * Tag inside markdown:
+ * ```
+ * @private
+ * ```
  */
 function example() {}

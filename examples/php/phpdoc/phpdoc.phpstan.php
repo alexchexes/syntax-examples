@@ -9,6 +9,7 @@
  *    | 'baz'
  *    | 1 | 2 | 3
  *    | '{' | '}' // ha-ha, got you!
+ *    | '@deprecated' | '{@see https://example.com}'
  *    | BAZ
  *    | baz
  *    | Foo\Bar::BAZ
