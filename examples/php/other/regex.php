@@ -1,10 +1,7 @@
 <?php
 
-/*---------------------------*
-*    Regexp interpolation    *
-*----------------------------*/
-
-// The following is borrowed from here: https://github.com/RedCMD/regex-syntax-highlighter-vscode/blob/main/syntaxes/tests/test.js *
+// Direct copy-paste from JS regex example: https://github.com/RedCMD/regex-syntax-highlighter-vscode/blob/main/syntaxes/tests/test.js *
+// Needs adjustements for PCRE2/oniguruma
 
 $r = '/[]/';
 $r = '/re[g[G]][e\\]((x)/.source + /rege2 )/';
@@ -74,9 +71,9 @@ $formats = [
 
 $controlCharacters = '/\cA\ca\cM\cm\cJ\cj\cZ\cz  \c@\c*/';
 
-/*--------------------------*
-*        Additional:        *
-*---------------------------*/
+/*------------------------*
+*        PHP tests        *
+*-------------------------*/
  
 $r = '/(?:^|(?<=<\?php))\s*(namespace)\s+([a-z0-9_\x{7f}-\x{10ffff}\\]+)(?=\s*;)/';
 
