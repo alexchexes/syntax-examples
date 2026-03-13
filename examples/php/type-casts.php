@@ -36,3 +36,32 @@ class B extends A
         return [$a, $b, $c, $foo];
     }
 }
+
+// Old PHP 5-era style code from a legacy admin panel.
+
+$row = [
+    'user_id'      => '42',
+    'is_admin'     => '1',
+    'balance'      => '99.95',
+    'nickname'     => null,
+    'last_login'   => 1700000000,
+    'permissions'  => 'manage_users',
+    'meta'         => null,
+];
+
+// Old alias casts commonly seen in legacy code
+$userId    = (integer) $row['user_id'];
+$isAdmin   = (boolean) $row['is_admin'];
+$balance   = (double) $row['balance'];
+
+// Regular casts that were also common
+$nickname  = (string) $row['nickname'];
+$lastLogin = (string) $row['last_login'];
+$meta      = (array) $row['meta'];
+$perms     = (array) $row['permissions'];
+
+
+if ($isAdmin) {
+    echo "Admin #".$userId." (".$nickname.") has balance ".$balance."\n";
+    echo "Last login: ".$lastLogin."\n";
+}
