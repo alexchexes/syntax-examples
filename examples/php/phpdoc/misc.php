@@ -11,15 +11,23 @@ final class Foo extends Bar Implements Baz
     public const STATE_RUNNING = 'running';
     public const STATE_FINISHED = 'finished';
 
+    /** @var int Description $test is not `@var` name */
+    public $baz;
+
     /**
      * Summary
      * 
-     * Description
+     * Description with inline tag {@see Foo}
+     * And one more @see Foo mentioned in text
      * 
-     * @var asd $asd
+     * More description
+     * 
+     * @var some $type
      * 
      * @param ?int $foo Description 
      * more description
+     * 
+     * @param int Description $baz is not a parameter name
      * 
      * @param \Foo\Bar[] $foo Description 
      * @param \Foo\Bar[][] $foo Description 
