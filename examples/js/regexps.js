@@ -67,79 +67,10 @@ const formats = {
 const controlCharacters = /\cA\ca\cM\cm\cJ\cj\cZ\cz  \c@\c*/;
 
 
-new RegExp(/[a-z]/);
+re = /[a-z]/;
+re = /[a[]/;
+re = /[[]/;
+re = /[a\[]/;
+re = /[\[]/;
 
-new RegExp(/[a[]/);
-new RegExp(/[[]/);
-
-new RegExp(/[a\[]/);
-new RegExp(/[\[]/);
-
-`
-[
-punctuation.definition.character-class.regexp.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-
-[
-constant.other.character-class.set.regexp.regex.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-
-]
-punctuation.definition.character-class.regexp.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-`
-
-new RegExp(/[\[]/);
-`
-[
-punctuation.definition.character-class.regexp.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-
-\
-constant.character.escape.backslash.regexp.js
-constant.other.character-class.set.regexp.regex.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-
-[
-constant.other.character-class.set.regexp.regex.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-
-]
-punctuation.definition.character-class.regexp.js
-meta.embedded.character-class.regexp.js
-string.regexp.js
-meta.embedded.js.regexp
-string.regexp.js
-new.expr.js
-source.js
-`
+re = /\x41/i;

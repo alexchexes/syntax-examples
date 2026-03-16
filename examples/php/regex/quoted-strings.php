@@ -2,7 +2,7 @@
 // This a direct copy-paste from here (JS): https://github.com/RedCMD/regex-syntax-highlighter-vscode/blob/main/syntaxes/tests/test.js *
 // Needs adjustements for the actual PHP/PCRE2
 $notARegex = '/foo-1/bar[a-z]/$baz(ab)/'; // unescaped delimiter in any context where it requires escaping must prevent entering a "regex" mode so we don't make URIs/paths look like regexes when they're not
-$r = '/re[g[G]][e\\]((x)/' + '/rege2 )/';
+$r = '/re[g[G]][e\\]((x)/' + '/[a-z] )/';
 $r = '/r\e[g[G]]e(x)/';
 $r = '/re[g-[G]]e(x)/';
 $r = '/^refs\/tags\/([^ ]+) ([0-9a-f]{40}) ([0-9a-f]{40})?$/';
