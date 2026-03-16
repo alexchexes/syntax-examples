@@ -99,17 +99,58 @@ $supportedBackreferences = <<<'REGEX'
 ((foo))(?:bar)\2
 REGEX;
 
+// in heredoc, PHP must win for its sequences unless double-escaped
+$r = <<<REGEX
+\1    \x41    \u{41}
+\n    \v      \$
+\\1   \\x41   \\u{41}
+\\n   \\v     \\$
+[\1]  [\x41]  [\u{41}]
+[\n]  [\v]    [\$]
+[\\1] [\\x41] [\\u{41}]
+[\\n] [\\v]   [\\$]
+
+\  \\  \/
+
+# regression control
+\d     \p{L}     \x{41}
+\\d    \\p{L}    \\x{41}
+[\d]   [\p{L}]   [\x{41}]
+[\\d]  [\\p{L}]  [\\x{41}]
+REGEX;
+
+// in nowdoc, no such problem, almost everything is regex-first
+$r = <<<'REGEX'
+\1    \x41    \u{41}
+\n    \v      \$
+\\1   \\x41   \\u{41}
+\\n   \\v     \\$
+[\1]  [\x41]  [\u{41}]
+[\n]  [\v]    [\$]
+[\\1] [\\x41] [\\u{41}]
+[\\n] [\\v]   [\\$]
+
+\  \\  \/
+
+# regression control
+\d     \p{L}     \x{41}
+\\d    \\p{L}    \\x{41}
+[\d]   [\p{L}]   [\x{41}]
+[\\d]  [\\p{L}]  [\\x{41}]
+REGEX;
+
 // Supported multiline nesting in explicit blocks.
 $supportedMultiline = <<<'REGEXP'
-/[ab
-cd]/
-/(ab
-cd)/
+/[abc-e
+fgx-z]/
+/(ab|
+c
+|de)/
 /(?<word>ab
 cd)/
 (
-  [ab
-  cd]
+  [abc-e
+  fg-lxz]
   (?<word>
     foo
     bar
@@ -125,9 +166,9 @@ $supportedInterpolation = <<<REGEXP
 (?<{$captureName}>[{$interpolatedHex}\d]+)
 (?<{$captureName}>$fragment(?:$separator$fragment{$makeFragment("REGEXP;")})*)
 ($fragment)
-($fragment{$makeFragment("foo")})
+($fragment{$makeFragment("/(\"\'[a-z]|\d+)/ui")})
 \Q$interpolatedHex\E
-\Q$fragment\E
+\Q$fragment{$makeFragment("/(\"\'[a-z]|\d+)/ui")}\E
 (?# interpolation is still available here: $fragment)
 REGEXP;
 
@@ -136,7 +177,7 @@ $noInterpolationInNowdoc = <<<'REGEXP'
 (?<{$captureName}>[{$interpolatedHex}\d]+)
 (?<{$captureName}>$fragment(?:$separator$fragment{$makeFragment("REGEXP;")})*)
 ($fragment)
-($fragment{$makeFragment("foo")})
+($fragment{$makeFragment("/\"\'[a-z]\'\"/ui")})
 \Q$interpolatedHex\E
 \Q$fragment\E
 REGEXP;

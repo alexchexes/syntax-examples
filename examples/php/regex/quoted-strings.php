@@ -1,7 +1,7 @@
 <?php
 // This a direct copy-paste from here (JS): https://github.com/RedCMD/regex-syntax-highlighter-vscode/blob/main/syntaxes/tests/test.js *
 // Needs adjustements for the actual PHP/PCRE2
-
+$notARegex = '/foo-1/bar[a-z]/$baz(ab)/'; // unescaped delimiter in any context where it requires escaping must prevent entering a "regex" mode so we don't make URIs/paths look like regexes when they're not
 $r = '/re[g[G]][e\\]((x)/' + '/rege2 )/';
 $r = '/r\e[g[G]]e(x)/';
 $r = '/re[g-[G]]e(x)/';
@@ -76,3 +76,21 @@ $formats = [
 $controlCharacters = '/\cA\ca\cM\cm\cJ\cj\cZ\cz  \c@\c*/';
 
 $r = '/(?:^|(?<=<\?php))\s*(namespace)\s+([a-z0-9_\x{7f}-\x{10ffff}\\]+)(?=\s*;)/';
+
+
+$r = "/\Q.^$[](){}+*?|#\E\d/";
+$r = "/\Q$fragment{$foo("/[a-z]/")}\E/";
+$r = "/\Qraw $value{$foo("/[a-z]/")} stays raw here\E/";
+
+$r = "/\Q$interpolatedHex{$foo($bar)}\E/";
+$r = "/\Q$fragment{$foo($bar)}\E/";
+$r = "/\Qraw $value{$foo($bar)} stays raw here\E/";
+$r = "/\Qab/";
+$r = "/[\q]/";
+
+/*---------------------------------------*
+*  known limitations / unhandled cases:  *
+*----------------------------------------*/
+// regex inside interpolation inside quoted regex
+$r = "/$interpolatedHex{$foo("/[a-z]/")}[a-z]/";
+$r = "/\Q$interpolatedHex{$foo("/[a-z]/")}\E[a-z]/";
