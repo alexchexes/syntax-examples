@@ -2,47 +2,47 @@
 // This a direct copy-paste from here (JS): https://github.com/RedCMD/regex-syntax-highlighter-vscode/blob/main/syntaxes/tests/test.js
 // Needs adjustements for the actual PHP/PCRE2
 $r = <<<REGEX
-       re[g[G]][e\\]((x) {$f()} rege2 )
-       r\e[g[G]]e(x)
-       re[g-[G]]e(x)
-       ^refs\/tags\/([^ ]+) ([0-9a-f]{40}) ([0-9a-f]{40})?$
-       ^refs\/tags\/([^ ]+)\0\1\000\777\999 ([0-9a-f]{40}) ([0-9a-f]{40})?$
-       ["\'](module|(text|application)\/(java|ecma)script|text\/babel)["\']
-       [\"'](module|(text|application)\/(java|ecma)script|text\/babel)[\"']
-       ^data:(?<type>[^,]*?),(?<data>[^#]*?)(?:#(?<hash>.*))?$
-       ^(?:[34][0-8]|9[0-7]|10[0-7]|[0-9]|2[1-5,7-9]|[34]9|5[8,9]|1[0-9])(?:;[349][0-7]|10[0-7]|[013]|[245]|[34]9)?(?:;[012]?[0-9]?[0-9])*;?m$
-       (?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)
-       ^((?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$
-       ^(?:(?:25[\d0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$
-       [a-z0-9](foo(?# comment {$r} comment)bar)
-       /
-       \/
-       [a/b]
-       []
+            re[g[G]][e\\]((x) {$f()} rege2 )
+            r\e[g[G]]e(x)
+            re[g-[G]]e(x)
+            ^refs\/tags\/([^ ]+) ([0-9a-f]{40}) ([0-9a-f]{40})?$
+            ^refs\/tags\/([^ ]+)\0\1\000\777\999 ([0-9a-f]{40}) ([0-9a-f]{40})?$
+            ["\'](module|(text|application)\/(java|ecma)script|text\/babel)["\']
+            [\"'](module|(text|application)\/(java|ecma)script|text\/babel)[\"']
+            ^data:(?<type>[^,]*?),(?<data>[^#]*?)(?:#(?<hash>.*))?$
+            ^(?:[34][0-8]|9[0-7]|10[0-7]|[0-9]|2[1-5,7-9]|[34]9|5[8,9]|1[0-9])(?:;[349][0-7]|10[0-7]|[013]|[245]|[34]9)?(?:;[012]?[0-9]?[0-9])*;?m$
+            (?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)
+            ^((?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-zQ0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$
+            ^(?:(?:25[\d0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$
+            [a-z0-9](foo(?# comment {$r} comment)bar)
+            /
+            \/
+            [a/b]
+            []
 REGEX;
 $r = <<<REGEX
        ^\w+:\/\/;
 REGEX;
 $r = <<<REGEX
-      (?<whitespace>[ \t\r\n]+)
-      (?<comment>\/\/.*$|\/\*.*?\*\/)
-      (?<forwardSlash>\/(?!\s))     # for some reason, Apple ignores single forward slashes before any non-whitespace token
-      (?<curlyOpen>{)
-      (?<curlyClose>})
-      (?<parenOpen>\()
-      (?<parenClose>\))
-      (?<stringDouble>"(?:\\.|[^"\\]+)*")
-      (?<stringSingle>'(?:''|[^']+)*')
-      (?<stringUnquoted>[A-Za-z_][A-Za-z0-9_.-]*)
-      (?<float>[+-]?\d*\.\d+)
-      (?<integer>[+-]?(0x[a-fA-F\d]+|0[0-7]+|\d+))
-      {$r}(?<{$r}>[+-]?({$r}0x[a-f{$r}A-F\d]+|0[0-7]+|{$r}\d+){$r}){$r}     # php interpolation
-      (?<boolean>:true|:false)
-      (?<date>@\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4})
-      (?<assign>=)
-      (?<comma>,)
-      (?<semiColon>;)
-      (?<invalid>.)
+     (?<whitespace>[ \t\r\n]+)
+     (?<comment>\/\/.*$|\/\*.*?\*\/)
+     (?<forwardSlash>\/(?!\s))     # for some reason, Apple ignores single forward slashes before any non-whitespace token
+     (?<curlyOpen>{)
+     (?<curlyClose>})
+     (?<parenOpen>\()
+     (?<parenClose>\))
+     (?<stringDouble>"(?:\\.|[^"\\]+)*")
+     (?<stringSingle>'(?:''|[^']+)*')
+     (?<stringUnquoted>[A-Za-z_][A-Za-z0-9_.-]*)
+     (?<float>[+-]?\d*\.\d+)
+     (?<integer>[+-]?(0x[a-fA-F\d]+|0[0-7]+|\d+))
+     {$r}(?<{$r}>[+-]?({$r}0x[a-f{$r}A-F\d]+|0[0-7]+|{$r}\d+){$r}){$r}     # php interpolation
+     (?<boolean>:true|:false)
+     (?<date>@\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4})
+     (?<assign>=)
+     (?<comma>,)
+     (?<semiColon>;)
+     (?<invalid>.)
 REGEX;
 $r = <<<REGEX
        \\\xFF
@@ -150,4 +150,27 @@ REGEX;
 
 $r = <<<REGEX
 foo(bar)
+REGEX;
+
+
+<<<REGEX
+re[g[G]][e\\]
+REGEX;
+<<<REGEX
+r\e[g[G]]e(x)
+REGEX;
+<<<REGEX
+re[g-[G]]e(x) # invalid
+REGEX;
+
+<<<REGEX
+(\()
+REGEX;
+
+<<<REGEX
+[[]
+REGEX;
+
+<<<REGEX
+[\[]
 REGEX;

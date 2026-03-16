@@ -1,5 +1,6 @@
 
 
+new RegExp(/[a[]/);
 new RegExp(/[]/);
 new RegExp(/re[g[G]][e\\]((x)/.source + /rege2 )/.source);
 new RegExp(/r\e[g[G]]e(x)/);
@@ -7,6 +8,7 @@ new RegExp(/re[g-[G]]e(x)/);
 new RegExp(/^refs\/tags\/([^ ]+) ([0-9a-f]{40}) ([0-9a-f]{40})?$/);
 new RegExp(/^refs\/tags\/([^ ]+)\0\1\000\777\999 ([0-9a-f]{40}) ([0-9a-f]{40})?$/);
 new RegExp(/["'](module|(text|application)\/(java|ecma)script|text\/babel)["']/);
+
 new RegExp(/^data:(?<type>[^,]*?),(?<data>[^#]*?)(?:#(?<hash>.*))?$/);
 new RegExp(/^(?:[34][0-8]|9[0-7]|10[0-7]|[0-9]|2[1-5,7-9]|[34]9|5[8,9]|1[0-9])(?:;[349][0-7]|10[0-7]|[013]|[245]|[34]9)?(?:;[012]?[0-9]?[0-9])*;?m$/);
 new RegExp(/(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)/);
@@ -16,6 +18,7 @@ new RegExp(/\//);
 
 const aa = /2/g//
 const isLinkRelative = !/^\w+:\/\//.test(link) && link[0] !== '#';
+
 
 const regex = new RegExp(
 	[
@@ -62,3 +65,81 @@ const formats = {
 };
 
 const controlCharacters = /\cA\ca\cM\cm\cJ\cj\cZ\cz  \c@\c*/;
+
+
+new RegExp(/[a-z]/);
+
+new RegExp(/[a[]/);
+new RegExp(/[[]/);
+
+new RegExp(/[a\[]/);
+new RegExp(/[\[]/);
+
+`
+[
+punctuation.definition.character-class.regexp.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+
+[
+constant.other.character-class.set.regexp.regex.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+
+]
+punctuation.definition.character-class.regexp.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+`
+
+new RegExp(/[\[]/);
+`
+[
+punctuation.definition.character-class.regexp.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+
+\
+constant.character.escape.backslash.regexp.js
+constant.other.character-class.set.regexp.regex.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+
+[
+constant.other.character-class.set.regexp.regex.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+
+]
+punctuation.definition.character-class.regexp.js
+meta.embedded.character-class.regexp.js
+string.regexp.js
+meta.embedded.js.regexp
+string.regexp.js
+new.expr.js
+source.js
+`
