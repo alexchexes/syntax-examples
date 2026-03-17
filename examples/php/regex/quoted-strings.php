@@ -102,7 +102,7 @@ REGEX;
 
 
 // backslash before non-alnum char, `;` is just example, applies to ', " and other
-$regex = <<<'REGEX'
+$r = <<<'REGEX'
 /\;/                        # matches ;
 /\\;/                       # matches \;
 /\\\;/                      # matches \;
@@ -112,7 +112,7 @@ $regex = <<<'REGEX'
 /\\\\\\\;/                  # matches \\\;
 REGEX;
 
-$regex = <<<REGEX
+$r = <<<REGEX
 /\;/                 # matches ;
 /\\;/                # matches ;
 /\\\;/               # matches \;
@@ -126,44 +126,286 @@ $regex = <<<REGEX
 /\\\\\\\\\\\;/       # finally matches \\\;...
 REGEX;
 
-$regex = "/\;/";            // matches ;
-$regex = "/\\;/";           // matches ;
-$regex = "/\\\;/";          // matches \;
-$regex = "/\\\\;/";         // matches \;
-$regex = "/\\\\\;/";        // matches \;
-$regex = "/\\\\\\;/";       // matches \;
-$regex = "/\\\\\\\;/";      // finally matches \\;
-$regex = "/\\\\\\\\;/";     // matches \\;
-$regex = "/\\\\\\\\\;/";    // matches \\;
-$regex = "/\\\\\\\\\\;/";   // matches \\;
-$regex = "/\\\\\\\\\\\;/";  // finally matches \\\;...
+$rs = [
+    "/\;/",            // matches ;
+    "/\\;/",           // matches ;
+    "/\\\;/",          // matches \;
+    "/\\\\;/",         // matches \;
+    "/\\\\\;/",        // matches \;
+    "/\\\\\\;/",       // matches \;
+    "/\\\\\\\;/",      // finally matches \\;
+    "/\\\\\\\\;/",     // matches \\;
+    "/\\\\\\\\\;/",    // matches \\;
+    "/\\\\\\\\\\;/",   // matches \\;
+    "/\\\\\\\\\\\;/",  // finally matches \\\;...
 
-$regex = '/\;/';            // matches ;
-$regex = '/\\;/';           // matches ;
-$regex = '/\\\;/';          // matches \;
-$regex = '/\\\\;/';         // matches \;
-$regex = '/\\\\\;/';        // matches \;
-$regex = '/\\\\\\;/';       // matches \;
-$regex = '/\\\\\\\;/';      // finally, matches \\;
-$regex = '/\\\\\\\\;/';     // matches \\;
-$regex = '/\\\\\\\\\;/';    // matches \\;
-$regex = '/\\\\\\\\\\;/';   // matches \\;
-$regex = '/\\\\\\\\\\\;/';  // finally, matches \\\;...
+    '/\;/',            // matches ;
+    '/\\;/',           // matches ;
+    '/\\\;/',          // matches \;
+    '/\\\\;/',         // matches \;
+    '/\\\\\;/',        // matches \;
+    '/\\\\\\;/',       // matches \;
+    '/\\\\\\\;/',      // finally, matches \\;
+    '/\\\\\\\\;/',     // matches \\;
+    '/\\\\\\\\\;/',    // matches \\;
+    '/\\\\\\\\\\;/',   // matches \\;
+    '/\\\\\\\\\\\;/',  // finally, matches \\\;...
+];
 
 // special case when non-alnum is a PHP quoted string escape
-$regex = '/\'/';            // matches '
-$regex = '/\\\'/';          // matches '
-$regex = '/\\\\\'/';        // matches \'
-$regex = '/\\\\\\\'/';      // matches \'
-$regex = '/\\\\\\\\\'/';    // matches \\'
-$regex = '/\\\\\\\\\\\'/';  // matches \\'
+$rs = [
+    '/\'/',            // matches '
+    '/\\\'/',          // matches '
+    '/\\\\\'/',        // matches \'
+    '/\\\\\\\'/',      // matches \'
+    '/\\\\\\\\\'/',    // matches \\'
+    '/\\\\\\\\\\\'/',  // matches \\'
 
-$regex = "/\"/";            // matches "
-$regex = "/\\\"/";          // matches "
-$regex = "/\\\\\"/";        // matches \"
-$regex = "/\\\\\\\"/";      // matches \"
-$regex = "/\\\\\\\\\"/";    // matches \\"
-$regex = "/\\\\\\\\\\\"/";  // matches \\"
+    "/\"/",            // matches "
+    "/\\\"/",          // matches "
+    "/\\\\\"/",        // matches \"
+    "/\\\\\\\"/",      // matches \"
+    "/\\\\\\\\\"/",    // matches \\"
+    "/\\\\\\\\\\\"/",  // matches \\"
+];
+
+$input = <<<'TXT'
+\\j
+\\[a-z]
+TXT;
+
+$r = <<<'REGEX'
+/[a-z]/                     # matches `j`        (a-z range)
+/\[a-z]/                    # matches `[a-z]`    (literal string)
+/\\[a-z]/                   # matches `\j`       (\ + a-z range)
+/\\\[a-z]/                  # matches `\[a-z]`   (literal string)
+/\\\\[a-z]/                 # matches `\\j`      (\\ + a-z range)
+/\\\\\[a-z]/                # matches `\\[a-z]`  (literal string)
+REGEX;
+
+$r = <<<REGEX
+/[a-z]/                     # matches `j`        (a-z range)
+/\[a-z]/                    # matches `[a-z]`    (literal string)
+/\\[a-z]/                   # matches `[a-z]`    (literal string)
+/\\\[a-z]/                  # matches `\j`       (\ + a-z range)
+/\\\\[a-z]/                 # matches `\j`       (\ + a-z range)
+/\\\\\[a-z]/                # matches `\[a-z]`   (literal string)
+/\\\\\\[a-z]/               # matches `\[a-z]`   (literal string)
+/\\\\\\\[a-z]/              # matches `\\j`      (\\ + a-z range)
+/\\\\\\\\[a-z]/             # matches `\\j`      (\\ + a-z range)
+/\\\\\\\\\[a-z]/            # matches `\\[a-z]`  (literal string)
+/\\\\\\\\\\[a-z]/           # matches `\\[a-z]`  (literal string)
+REGEX;
+
+$rs = [
+    '/[a-z]/',             # matches `j`        (a-z range)
+    '/\[a-z]/',            # matches `[a-z]`    (literal string)
+    '/\\[a-z]/',           # matches `[a-z]`    (literal string)
+    '/\\\[a-z]/',          # matches `\j`       (\ + a-z range)
+    '/\\\\[a-z]/',         # matches `\j`       (\ + a-z range)
+    '/\\\\\[a-z]/',        # matches `\[a-z]`   (literal string)
+    '/\\\\\\[a-z]/',       # matches `\[a-z]`   (literal string)
+    '/\\\\\\\[a-z]/',      # matches `\\j`      (\\ + a-z range)
+    '/\\\\\\\\[a-z]/',     # matches `\\j`      (\\ + a-z range)
+    '/\\\\\\\\\[a-z]/',    # matches `\\[a-z]`  (literal string)
+    '/\\\\\\\\\\[a-z]/',   # matches `\\[a-z]`  (literal string)
+
+    "/[a-z]/",             # matches `j`        (a-z range)
+    "/\[a-z]/",            # matches `[a-z]`    (literal string)
+    "/\\[a-z]/",           # matches `[a-z]`    (literal string)
+    "/\\\[a-z]/",          # matches `\j`       (\ + a-z range)
+    "/\\\\[a-z]/",         # matches `\j`       (\ + a-z range)
+    "/\\\\\[a-z]/",        # matches `\[a-z]`   (literal string)
+    "/\\\\\\[a-z]/",       # matches `\[a-z]`   (literal string)
+    "/\\\\\\\[a-z]/",      # matches `\\j`      (\\ + a-z range)
+    "/\\\\\\\\[a-z]/",     # matches `\\j`      (\\ + a-z range)
+    "/\\\\\\\\\[a-z]/",    # matches `\\[a-z]`  (literal string)
+    "/\\\\\\\\\\[a-z]/",   # matches `\\[a-z]`  (literal string)
+];
+
+$input = <<<'TXT'
+\\j
+\\a-z
+TXT;
+
+$r = <<<'REGEX'
+/[a-z]/                 # matches `j`, `a`, `z`
+/[\a-z]/                # matches `\`, `j`, `a`, `-`, `z`, and a newline (btw, why?)
+/[\\a-z]/               # matches `\`, `j`, `a`, `z`
+/[\\\a-z]/              # matches `\`, `j`, `a`, `-`, `z`, a newline
+REGEX;
+
+<<<REGEX
+/[a-z]/                 # matches: `j`, `a`, `z`
+/[\a-z]/                # matches: `\`, `j`, `a`, `-`, `z`, and a newline (btw, why?)
+/[\\a-z]/               # matches: `\`, `j`, `a`, `-`, `z`, a newline
+/[\\\a-z]/              # matches: `\`, `j`, `a`, `z`
+/[\\\\a-z]/             # matches: `\`, `j`, `a`, `z`
+/[\\\\\a-z]/            # matches: `\`, `j`, `a`, `-`, `z`, a newline
+/[\\\\\\a-z]/           # matches: `\`, `j`, `a`, `-`, `z`, a newline
+/[\\\\\\\a-z]/          # matches: `\`, `j`, `a`, `z` ...
+REGEX;
+
+$rs = [
+    '/[a-z]/',                 # matches: `j`, `a`, `z`
+    '/[\a-z]/',                # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    '/[\\a-z]/',               # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    '/[\\\a-z]/',              # matches: `\`, `j`, `a`, `z`
+    '/[\\\\a-z]/',             # matches: `\`, `j`, `a`, `z`
+    '/[\\\\\a-z]/',            # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    '/[\\\\\\a-z]/',           # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    '/[\\\\\\\a-z]/',          # matches: `\`, `j`, `a`, `z`
+
+    "/[a-z]/",                 # matches: `j`, `a`, `z`
+    "/[\a-z]/",                # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    "/[\\a-z]/",               # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    "/[\\\a-z]/",              # matches: `\`, `j`, `a`, `z`
+    "/[\\\\a-z]/",             # matches: `\`, `j`, `a`, `z`
+    "/[\\\\\a-z]/",            # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    "/[\\\\\\a-z]/",           # matches: `\`, `j`, `a`, `-`, `z`, a newline
+    "/[\\\\\\\a-z]/",          # matches: `\`, `j`, `a`, `z`
+];
+
+$rs = [
+    "/['a-z]/",                 # matches: `j`, `a`, `z`, `'`
+    "/[\'a-z]/",                # matches: `j`, `a`, `z`, `'`
+    "/[\\'a-z]/",               # matches: `j`, `a`, `z`, `'`
+    "/[\\\'a-z]/",              # matches: `\`, `j`, `a`, `z`, `'`
+    "/[\\\\'a-z]/",             # matches: `\`, `j`, `a`, `z`, `'`
+    "/[\\\\\'a-z]/",            # matches: `\`, `j`, `a`, `z`, `'`
+    "/[\\\\\\'a-z]/",           # matches: `\`, `j`, `a`, `z`, `'`
+    "/[\\\\\\\'a-z]/",          # matches: `\`, `j`, `a`, `z`, `'`
+    
+    '/["a-z]/',                 # matches: `j`, `a`, `z`, `"`
+    '/[\"a-z]/',                # matches: `j`, `a`, `z`, `"`
+    '/[\\"a-z]/',               # matches: `j`, `a`, `z`, `"`
+    '/[\\\"a-z]/',              # matches: `\`, `j`, `a`, `z`, `"`
+    '/[\\\\"a-z]/',             # matches: `\`, `j`, `a`, `z`, `"`
+    '/[\\\\\"a-z]/',            # matches: `\`, `j`, `a`, `z`, `"`
+    '/[\\\\\\"a-z]/',           # matches: `\`, `j`, `a`, `z`, `"`
+    '/[\\\\\\\"a-z]/',          # matches: `\`, `j`, `a`, `z`, `"`
+
+    '/[\'a-z]/',                # matches: `j`, `a`, `z`, `'`
+    '/[\\\'a-z]/',              # matches: `j`, `a`, `z`, `'`
+    '/[\\\\\'a-z]/',            # matches: `\`, `j`, `a`, `z`, `'`
+    '/[\\\\\\\'a-z]/',          # matches: `\`, `j`, `a`, `z`, `'`
+
+    "/[\"a-z]/",                # matches: `j`, `a`, `z`, `"`
+    "/[\\\"a-z]/",              # matches: `j`, `a`, `z`, `"`
+    "/[\\\\\"a-z]/",            # matches: `\`, `j`, `a`, `z`, `"`
+    "/[\\\\\\\"a-z]/",          # matches: `\`, `j`, `a`, `z`, `"`
+];
+
+<<<REGEX
+/['a-z]/                # matches: `j`, `a`, `z`, `'`
+/[\'a-z]/               # matches: `j`, `a`, `z`, `'`
+/[\\'a-z]/              # matches: `j`, `a`, `z`, `'`
+/[\\\'a-z]/             # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\'a-z]/            # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\'a-z]/           # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\\'a-z]/          # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\\\'a-z]/         # matches: `\`, `j`, `a`, `z`, `'`
+
+/["a-z]/                # matches: `j`, `a`, `z`, `"`
+/[\"a-z]/               # matches: `j`, `a`, `z`, `"`
+/[\\"a-z]/              # matches: `j`, `a`, `z`, `"`
+/[\\\"a-z]/             # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\"a-z]/            # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\"a-z]/           # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\\"a-z]/          # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\\\"a-z]/         # matches: `\`, `j`, `a`, `z`, `"`
+
+/[\'a-z]/               # matches: `j`, `a`, `z`, `'`
+/[\\\'a-z]/             # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\'a-z]/           # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\\\'a-z]/         # matches: `\`, `j`, `a`, `z`, `'`
+
+/[\"a-z]/               # matches: `j`, `a`, `z`, `"`
+/[\\\"a-z]/             # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\"a-z]/           # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\\\"a-z]/         # matches: `\`, `j`, `a`, `z`, `"`
+REGEX;
+
+<<<'REGEX'
+/['a-z]/                # matches: `j`, `a`, `z`, `'`
+/[\'a-z]/               # matches: `j`, `a`, `z`, `'`
+/[\\'a-z]/              # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\'a-z]/             # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\'a-z]/            # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\'a-z]/           # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\\'a-z]/          # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\\\'a-z]/         # matches: `\`, `j`, `a`, `z`, `'`
+
+/["a-z]/                # matches: `j`, `a`, `z`, `"`
+/[\"a-z]/               # matches: `j`, `a`, `z`, `"`
+/[\\"a-z]/              # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\"a-z]/             # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\"a-z]/            # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\"a-z]/           # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\\"a-z]/          # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\\\"a-z]/         # matches: `\`, `j`, `a`, `z`, `"`
+
+/[\'a-z]/               # matches: `j`, `a`, `z`, `'`
+/[\\\'a-z]/             # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\'a-z]/           # matches: `\`, `j`, `a`, `z`, `'`
+/[\\\\\\\'a-z]/         # matches: `\`, `j`, `a`, `z`, `'`
+
+/[\"a-z]/               # matches: `j`, `a`, `z`, `"`
+/[\\\"a-z]/             # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\"a-z]/           # matches: `\`, `j`, `a`, `z`, `"`
+/[\\\\\\\"a-z]/         # matches: `\`, `j`, `a`, `z`, `"`
+REGEX;
+
+$rs = [
+    '/a/b/',                   # Internal error
+    '/a\/b/',                  # matches: `a/b`
+    '/a\\/b/',                 # matches: `a/b`
+    '/a\\\/b/',                # Internal error
+    '/a\\\\/b/',               # Internal error
+    '/a\\\\\/b/',              # matches: `a\/b`
+    '/a\\\\\\/b/',             # matches: `a\/b`
+
+    '/a/b/ ',                  # Internal error
+    '/a\/b/',                  # matches: `a/b`
+    '/a\\/b/',                 # matches: `a/b`
+    '/a\\\/b/',                # Internal error
+    '/a\\\\/b/',               # Internal error
+    '/a\\\\\/b/',              # matches: `a\/b`
+    '/a\\\\\\/b/',             # matches: `a\/b`
+    '/a\\\\\\\/b/',            # Internal error
+    '/a\\\\\\\\/b/',           # Internal error
+    '/a\\\\\\\\\/b/',          # matches: `a\\/b`
+    '/a\\\\\\\\\\/b/',         # matches: `a\\/b`
+    '/a\\\\\\\\\\\/b/',        # Internal error
+];
+
+<<<'REGEX'
+/a/b/                   # Internal error
+/a\/b/                  # matches: `a/b`
+/a\\/b/                 # Internal error
+/a\\\/b/                # matches: `a\/b`
+/a\\\\/b/               # Internal error
+/a\\\\\/b/              # matches: `a\\/b`
+/a\\\\\\/b/             # Internal error
+REGEX;
+
+<<<REGEX
+/a/b/                   # Internal error
+/a\/b/                  # matches: `a/b`
+/a\\/b/                 # matches: `a/b`
+/a\\\/b/                # Internal error
+/a\\\\/b/               # Internal error
+/a\\\\\/b/              # matches: `a\/b`
+/a\\\\\\/b/             # matches: `a\/b`
+/a\\\\\\\/b/            # Internal error
+/a\\\\\\\\/b/           # Internal error
+/a\\\\\\\\\/b/          # matches: `a\\/b`
+/a\\\\\\\\\\/b/         # matches: `a\\/b`
+/a\\\\\\\\\\\/b/        # Internal error
+REGEX;
+
+
+
 
 /*---------------------------------------*
 *  known limitations / unhandled cases:  *
