@@ -1,6 +1,6 @@
 <?php
-// mirrors the double-quoted set; `/u` is not a thing here, these pairs just track the plain and `/u` variants from that file
-// because the whole heredoc body is double-quoted-style text, literal backslashes in the notes have to be escaped too
+// Mirrors the double-quoted set; for visual parity, `/u` forms left in the same block near the non-/u
+// P.S. Since the whole heredoc body is double-quoted-style text, literal backslashes in the notes have to be escaped too
 $patterns = <<<REGEX
       😀                # PCRE sees:   /😀/            VALID            literal UTF-8 bytes from source; matches 😀 bytes even without /u
       😀                # PCRE sees:   /😀/u           VALID            literal UTF-8 bytes plus UTF mode; matches 😀 as U+1F600
@@ -21,11 +21,17 @@ $patterns = <<<REGEX
       \x1F600           # PCRE sees:   /<0x1F>600/u    VALID            same bytes as above; /u does not change the parsed string
 
       \\x{4A}           # PCRE sees:   /\x{4A}/        VALID            double-quoted \\ becomes one backslash; PCRE2 braced hex escape matches J
+
+      \\\x{4A}          # PCRE sees:   ? TODO
+      \\\x{4A}          # PCRE sees:   ? TODO
       \\x4A             # PCRE sees:   /\x4A/          VALID            double-quoted \\ becomes one backslash; PCRE2 hex escape matches J
+      
       \u{4A}            # PCRE sees:   /J/             VALID            PHP turns \u{4A} into literal J before PCRE
       \u{4A}            # PCRE sees:   /J/u            VALID            PHP turns \u{4A} into literal J before PCRE; /u is harmless here
       \x{4A}            # PCRE sees:   /\x{4A}/        VALID            PHP double quotes do not parse \x{...}; PCRE2 handles it and matches J
+      
       \x4A              # PCRE sees:   /J/             VALID            PHP parses \x4A into literal J before PCRE
+
     
       #---------------------------
       #  Not real code points
@@ -47,9 +53,13 @@ $patterns = <<<REGEX
       \x1Q600           # PCRE sees:   /<0x01>Q600/u   VALID            same bytes as above; /u does not change the parsed string
 
       \\x{4Q}           # PCRE sees:   /\x{4Q}/        INVALID          double-quoted \\ becomes one backslash, so PCRE2 sees non-hex Q in \x{...}
+
       \\x4Q             # PCRE sees:   /\x4Q/          VALID            double-quoted \\ becomes one backslash, so PCRE2 reads \x4 then literal Q
+
       \x{4Q}            # PCRE sees:   /\x{4Q}/        INVALID          PHP double quotes do not parse \x{...}; PCRE2 sees non-hex Q in \x{...}
+
       \x4Q              # PCRE sees:   /<0x04>Q/       VALID            PHP parses \x4 before PCRE; matches byte 0x04 + "Q"
-      \u{4Q}            # PCRE sees:   (nothing)       PHP PARSE ERROR  invalid UTF-8 codepoint escape sequence in a heredoc / double-quoted string
+
+      \u{4Q}            # PCRE sees:   (nothing)       PHP PARSE ERROR  invalid UTF-8 codepoint escape sequence in a heredoc / double-quoted string      
       \u{4Q}            # PCRE sees:   (nothing)       PHP PARSE ERROR  same as above; the mirrored `/u` variant is never reached
 REGEX;

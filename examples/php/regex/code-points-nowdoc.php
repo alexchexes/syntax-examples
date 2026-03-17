@@ -1,55 +1,65 @@
 <?php
-// mirrors the single-quoted set; `/u` is not a thing here, these pairs just track the plain and `/u` variants from that file
-// comments are incorrect, in nowdoc, backslahes are literal, so they reach pcre2 and, for example, `\\x{4A}` matches literal string `\x{4A}`. To match J we need just `\x{4A}`, and to match `\J` we need `\\\x{4A}`. Gotta correct comments and extend examples.
+// This file is about NOWDOC patterns only. In a nowdoc, PHP does not consume backslashes at all. That means the number of backslashes you type here is the number of backslashes PCRE receives.
+// P.S. For visual parity, `/u` forms left in the same block near the non-/u. Shown in "PCRE sees" note
 $patterns = <<<'REGEX'
-      😀                # PCRE sees:   /😀/            VALID            literal UTF-8 bytes from source; matches 😀 bytes even without /u
-      😀                # PCRE sees:   /😀/u           VALID            literal UTF-8 bytes plus UTF mode; matches 😀 as U+1F600
+      😀                # PCRE sees:   /😀/             VALID            literal UTF-8 bytes from source; matches 😀 bytes even without /u
+      😀                # PCRE sees:   /😀/u            VALID            same literal bytes, with UTF mode enabled
 
-      \\u{1F600}        # PCRE sees:   /\u{1F600}/     INVALID          PHP passes literal \u{1F600}; PCRE2 in PHP does not support \u{...}
-      \\u{1F600}        # PCRE sees:   /\u{1F600}/u    INVALID          /u enables UTF mode, not JavaScript-style \u{...}
-      \\u1F600          # PCRE sees:   /\u1F600/       INVALID          PHP passes literal \u1F600; PCRE2 in PHP does not support \u...
-      \\u1F600          # PCRE sees:   /\u1F600/u      INVALID          same as above; /u does not make \u valid
-      \\x{1F600}        # PCRE sees:   /\x{1F600}/     INVALID          PCRE2 sees a braced code point, but without /u 0x1F600 is too large for 8-bit mode
-      \\x{1F600}        # PCRE sees:   /\x{1F600}/u    VALID            PCRE2 braced hex escape in UTF mode; matches 😀
-      \u{1F600}         # PCRE sees:   /\u{1F600}/     INVALID          single-quoted backslash stays literal; same runtime pattern as above
-      \u{1F600}         # PCRE sees:   /\u{1F600}/u    INVALID          single-quoted backslash stays literal; /u still does not make \u valid
-      \u1F600           # PCRE sees:   /\u1F600/       INVALID          single-quoted backslash stays literal; PCRE2 does not support \u...
+      \\u{1F600}        # PCRE sees:   /\\u{1F600}/    VALID            doubled backslash in nowdoc stays doubled; matches literal text \u{1F600}
+      \\u{1F600}        # PCRE sees:   /\\u{1F600}/u   VALID            same literal-text match; /u does not reinterpret it as a Unicode escape
+      \\u1F600          # PCRE sees:   /\\u1F600/      VALID            matches literal text \u1F600
+      \\u1F600          # PCRE sees:   /\\u1F600/u     VALID            same as above
+      \\x{1F600}        # PCRE sees:   /\\x{1F600}/    VALID            matches literal text \x{1F600}; the braced hex is not parsed because the first \\ makes a literal backslash
+      \\x{1F600}        # PCRE sees:   /\\x{1F600}/u   VALID            same as above with /u
+      \u{1F600}         # PCRE sees:   /\u{1F600}/     INVALID          PCRE2 in PHP does not support JavaScript-style \u{...}
+      \u{1F600}         # PCRE sees:   /\u{1F600}/u    INVALID          /u enables UTF mode, but \u is still unsupported
+      \u1F600           # PCRE sees:   /\u1F600/       INVALID          PCRE2 does not support \u...
       \u1F600           # PCRE sees:   /\u1F600/u      INVALID          same as above
-      \x{1F600}         # PCRE sees:   /\x{1F600}/     INVALID          single-quoted backslash stays literal; code point > 0xFF needs /u
-      \x{1F600}         # PCRE sees:   /\x{1F600}/u    VALID            single-quoted backslash stays literal; PCRE2 matches 😀 in UTF mode
-      \x1F600           # PCRE sees:   /\x1F600/       VALID            PCRE2 reads \x1F, then literal 600; matches byte 0x1F + "600", not U+1F600
-      \x1F600           # PCRE sees:   /\x1F600/u      VALID            same bytes as above; /u does not change \x1F + "600"
+      \x{1F600}         # PCRE sees:   /\x{1F600}/     INVALID          braced code point is too large for non-UTF 8-bit mode
+      \x{1F600}         # PCRE sees:   /\x{1F600}/u    VALID            braced hex escape in UTF mode; matches 😀
+      \x1F600           # PCRE sees:   /\x1F600/       VALID            parsed as \x1F plus literal 600; matches byte 0x1F followed by "600"
+      \x1F600           # PCRE sees:   /\x1F600/u      VALID            same parse; /u does not change \x1F + "600"
 
-      \\x{4A}           # PCRE sees:   /\x{4A}/        VALID            single-quoted \\ becomes one backslash; PCRE2 braced hex escape matches J
-      \\x4A             # PCRE sees:   /\x4A/          VALID            single-quoted \\ becomes one backslash; PCRE2 hex escape matches J
-      \u{4A}            # PCRE sees:   /\u{4A}/        INVALID          single-quoted backslash stays literal; PCRE2 does not support \u{...}
+      \\x{4A}           # PCRE sees:   /\\x{4A}/       VALID            literal backslash + text x{4A} -> matches \x{4A}
+      \\x{4A}           # PCRE sees:   /\\x{4A}/u      VALID            same as above
+      \\\x{4A}          # PCRE sees:   /\\\x{4A}/      VALID            first two backslashes make a literal \, then hex escape -> matches \J
+      \\\x{4A}          # PCRE sees:   /\\\x{4A}/u     VALID            same as above
+      \\x4A             # PCRE sees:   /\\x4A/         VALID            matches literal text \x4A, not J
+      \\x4A             # PCRE sees:   /\\x4A/u        VALID            same as above
+      \u{4A}            # PCRE sees:   /\u{4A}/        INVALID          PCRE2 does not support \u{...}
       \u{4A}            # PCRE sees:   /\u{4A}/u       INVALID          same as above; /u does not help
-      \x{4A}            # PCRE sees:   /\x{4A}/        VALID            PCRE2 braced hex escape matches J
-      \x4A              # PCRE sees:   /\x4A/          VALID            PCRE2 hex escape matches J
+      \x{4A}            # PCRE sees:   /\x{4A}/        VALID            hex escape -> matches J
+      \x{4A}            # PCRE sees:   /\x{4A}/u       VALID            same as above
+      \x4A              # PCRE sees:   /\x4A/          VALID            hex escape matches J
+      \x4A              # PCRE sees:   /\x4A/u         VALID            same as above
 
       #---------------------------
-      #  Not real code points   
+      #  Not real code points
       #---------------------------
-      \\u{1Q600}        # PCRE sees:   /\u{1Q600}/     INVALID          PHP passes literal \u{1Q600}; PCRE2 rejects \u before the bogus digits matter
-      \\u{1Q600}        # PCRE sees:   /\u{1Q600}/u    INVALID          same as above; /u does not help
-      \\u1Q600          # PCRE sees:   /\u1Q600/       INVALID          PHP passes literal \u1Q600; PCRE2 does not support \u...
-      \\u1Q600          # PCRE sees:   /\u1Q600/u      INVALID          same as above
-      \\x{1Q600}        # PCRE sees:   /\x{1Q600}/     INVALID          braced hex escape contains non-hex Q
-      \\x{1Q600}        # PCRE sees:   /\x{1Q600}/u    INVALID          same as above; /u does not help
+      \\u{1Q600}        # PCRE sees:   /\\u{1Q600}/    VALID            doubled backslash makes it literal text; matches \u{1Q600}
+      \\u{1Q600}        # PCRE sees:   /\\u{1Q600}/u   VALID            same as above
+      \\u1Q600          # PCRE sees:   /\\u1Q600/      VALID            matches literal text \u1Q600
+      \\u1Q600          # PCRE sees:   /\\u1Q600/u     VALID            same as above
+      \\x{1Q600}        # PCRE sees:   /\\x{1Q600}/    VALID            doubled backslash makes it literal text; matches \x{1Q600}
+      \\x{1Q600}        # PCRE sees:   /\\x{1Q600}/u   VALID            same as above
 
-      \u{1Q600}         # PCRE sees:   /\u{1Q600}/     INVALID          single-quoted backslash stays literal; same runtime pattern as above
+      \u{1Q600}         # PCRE sees:   /\u{1Q600}/     INVALID          \u is unsupported before the bogus digits even matter
       \u{1Q600}         # PCRE sees:   /\u{1Q600}/u    INVALID          same as above
-      \u1Q600           # PCRE sees:   /\u1Q600/       INVALID          single-quoted backslash stays literal; PCRE2 does not support \u...
+      \u1Q600           # PCRE sees:   /\u1Q600/       INVALID          PCRE2 does not support \u...
       \u1Q600           # PCRE sees:   /\u1Q600/u      INVALID          same as above
-      \x{1Q600}         # PCRE sees:   /\x{1Q600}/     INVALID          single-quoted backslash stays literal; braced hex escape contains non-hex Q
+      \x{1Q600}         # PCRE sees:   /\x{1Q600}/     INVALID          braced hex escape contains non-hex Q
       \x{1Q600}         # PCRE sees:   /\x{1Q600}/u    INVALID          same as above
-      \x1Q600           # PCRE sees:   /\x1Q600/       VALID            PCRE2 reads \x1, then literal Q600; matches byte 0x01 + "Q600"
-      \x1Q600           # PCRE sees:   /\x1Q600/u      VALID            same bytes as above; /u does not change the parsed escape
+      \x1Q600           # PCRE sees:   /\x1Q600/       VALID            parsed as \x1 plus literal Q600; matches byte 0x01 followed by "Q600"
+      \x1Q600           # PCRE sees:   /\x1Q600/u      VALID            same as above
 
-      \\x{4Q}           # PCRE sees:   /\x{4Q}/        INVALID          braced hex escape contains non-hex Q
-      \\x4Q             # PCRE sees:   /\x4Q/          VALID            PCRE2 reads \x4, then literal Q; matches byte 0x04 + "Q"
-      \x{4Q}            # PCRE sees:   /\x{4Q}/        INVALID          single-quoted backslash stays literal; braced hex escape contains non-hex Q
-      \x4Q              # PCRE sees:   /\x4Q/          VALID            PCRE2 reads \x4, then literal Q; matches byte 0x04 + "Q"
-      \u{4Q}            # PCRE sees:   /\u{4Q}/        INVALID          single-quoted backslash stays literal; PCRE2 does not support \u{...}
+      \\x{4Q}           # PCRE sees:   /\\x{4Q}/       VALID            doubled backslash makes it literal text; matches \x{4Q}
+      \\x{4Q}           # PCRE sees:   /\\x{4Q}/u      VALID            same as above
+      \\x4Q             # PCRE sees:   /\\x4Q/         VALID            matches literal text \x4Q
+      \\x4Q             # PCRE sees:   /\\x4Q/u        VALID            same as above
+      \x{4Q}            # PCRE sees:   /\x{4Q}/        INVALID          braced hex escape contains non-hex Q
+      \x{4Q}            # PCRE sees:   /\x{4Q}/u       INVALID          same as above
+      \x4Q              # PCRE sees:   /\x4Q/          VALID            parsed as \x4 plus literal Q; matches byte 0x04 followed by "Q"
+      \x4Q              # PCRE sees:   /\x4Q/u         VALID            same as above
+      \u{4Q}            # PCRE sees:   /\u{4Q}/        INVALID          PCRE2 does not support \u{...}
       \u{4Q}            # PCRE sees:   /\u{4Q}/u       INVALID          same as above
 REGEX;
