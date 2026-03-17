@@ -19,7 +19,7 @@ new RegExp(/\//);
 const aa = /2/g//
 const isLinkRelative = !/^\w+:\/\//.test(link) && link[0] !== '#';
 
-
+r = /\v\r\n\s\t/;
 const regex = new RegExp(
 	[
 		/(?<whitespace>[ \t\r\n]+)/,

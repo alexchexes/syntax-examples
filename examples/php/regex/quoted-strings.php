@@ -20,7 +20,6 @@ $r = '/\\//';
 $r = '/[a/b]/';
 $r = '/[]/';
 
-
 $r = '/^\w+:\/\//';
 
 $r = [
@@ -88,9 +87,27 @@ $r = "/\Qraw $value{$foo($bar)} stays raw here\E/";
 $r = "/\Qab/";
 $r = "/[\q]/";
 
+$r = '/\v\r\n\s\t      [\v\r\n\s\t]/';
+$r = "/\v\r\n\s\t      [\v\r\n\s\t]/";
+$r = '/\\v\\r\\n\\s\\t [\\v\\r\\n\\s\\t]/';
+$r = "/\\v\\r\\n\\s\\t [\\v\\r\\n\\s\\t]/";
+<<<REGEX
+\v\r\n\s\t      [\v\r\n\s\t]
+\\v\\r\\n\\s\\t [\\v\\r\\n\\s\\t]
+REGEX;
+<<<'REGEX'
+\v\r\n\s\t      [\v\r\n\s\t]
+\\v\\r\\n\\s\\t [\\v\\r\\n\\s\\t]
+REGEX;
+
 /*---------------------------------------*
 *  known limitations / unhandled cases:  *
 *----------------------------------------*/
-// regex inside interpolation inside quoted regex
-$r = "/$interpolatedHex{$foo("/[a-z]/")}[a-z]/";
-$r = "/\Q$interpolatedHex{$foo("/[a-z]/")}\E[a-z]/";
+// double-quoted regex with interpolation that contains a delimiter or double quote
+$r = "/[a-z]{$foo('/[a-z]/')}[a-z]/";
+$r = "/[a-z]{$foo('"foooo"')}[a-z]/";
+// without offending charachters it works:
+$r = "/[a-z]{$foo('bar')}[a-z]/";
+
+// combining parts:
+$r = "/[a-z](" . $foo . ")[a-z]/";
