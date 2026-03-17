@@ -227,17 +227,15 @@ $input = <<<'TXT'
 \\j
 \\a-z
 TXT;
-
-$r = <<<'REGEX'
+<<<'REGEX'
 /[a-z]/                 # matches `j`, `a`, `z`
-/[\a-z]/                # matches `\`, `j`, `a`, `-`, `z`, and a newline (btw, why?)
+/[\a-z]/                # matches `\`, `j`, `a`, `-`, `z`, a newline
 /[\\a-z]/               # matches `\`, `j`, `a`, `z`
 /[\\\a-z]/              # matches `\`, `j`, `a`, `-`, `z`, a newline
 REGEX;
-
 <<<REGEX
 /[a-z]/                 # matches: `j`, `a`, `z`
-/[\a-z]/                # matches: `\`, `j`, `a`, `-`, `z`, and a newline (btw, why?)
+/[\a-z]/                # matches: `\`, `j`, `a`, `-`, `z`, a newline
 /[\\a-z]/               # matches: `\`, `j`, `a`, `-`, `z`, a newline
 /[\\\a-z]/              # matches: `\`, `j`, `a`, `z`
 /[\\\\a-z]/             # matches: `\`, `j`, `a`, `z`
@@ -264,8 +262,14 @@ $rs = [
     "/[\\\\\a-z]/",            # matches: `\`, `j`, `a`, `-`, `z`, a newline
     "/[\\\\\\a-z]/",           # matches: `\`, `j`, `a`, `-`, `z`, a newline
     "/[\\\\\\\a-z]/",          # matches: `\`, `j`, `a`, `z`
-];
 
+    // regressions check:
+    "/[\\\\\\\a-z]a-z]/",
+    "/[\\\\\\\a-z\]a-z]/",
+    "/[\\\\\\\a-z\\]a-z]/",
+    "/[\\\\\\\a-z\\\]a-z]/",
+    "/[\\\\\\\a-z\\\\]a-z]/",
+];
 $rs = [
     "/['a-z]/",                 # matches: `j`, `a`, `z`, `'`
     "/[\'a-z]/",                # matches: `j`, `a`, `z`, `'`
