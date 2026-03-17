@@ -100,6 +100,71 @@ REGEX;
 \\v\\r\\n\\s\\t [\\v\\r\\n\\s\\t]
 REGEX;
 
+
+// backslash before non-alnum char, `;` is just example, applies to ', " and other
+$regex = <<<'REGEX'
+/\;/                        # matches ;
+/\\;/                       # matches \;
+/\\\;/                      # matches \;
+/\\\\;/                     # matches \\;
+/\\\\\;/                    # matches \\;
+/\\\\\\;/                   # matches \\\;
+/\\\\\\\;/                  # matches \\\;
+REGEX;
+
+$regex = <<<REGEX
+/\;/                 # matches ;
+/\\;/                # matches ;
+/\\\;/               # matches \;
+/\\\\;/              # matches \;
+/\\\\\;/             # matches \;
+/\\\\\\;/            # matches \;
+/\\\\\\\;/           # finally matches \\;
+/\\\\\\\\;/          # matches \\;
+/\\\\\\\\\;/         # matches \\;
+/\\\\\\\\\\;/        # matches \\;
+/\\\\\\\\\\\;/       # finally matches \\\;...
+REGEX;
+
+$regex = "/\;/";            // matches ;
+$regex = "/\\;/";           // matches ;
+$regex = "/\\\;/";          // matches \;
+$regex = "/\\\\;/";         // matches \;
+$regex = "/\\\\\;/";        // matches \;
+$regex = "/\\\\\\;/";       // matches \;
+$regex = "/\\\\\\\;/";      // finally matches \\;
+$regex = "/\\\\\\\\;/";     // matches \\;
+$regex = "/\\\\\\\\\;/";    // matches \\;
+$regex = "/\\\\\\\\\\;/";   // matches \\;
+$regex = "/\\\\\\\\\\\;/";  // finally matches \\\;...
+
+$regex = '/\;/';            // matches ;
+$regex = '/\\;/';           // matches ;
+$regex = '/\\\;/';          // matches \;
+$regex = '/\\\\;/';         // matches \;
+$regex = '/\\\\\;/';        // matches \;
+$regex = '/\\\\\\;/';       // matches \;
+$regex = '/\\\\\\\;/';      // finally, matches \\;
+$regex = '/\\\\\\\\;/';     // matches \\;
+$regex = '/\\\\\\\\\;/';    // matches \\;
+$regex = '/\\\\\\\\\\;/';   // matches \\;
+$regex = '/\\\\\\\\\\\;/';  // finally, matches \\\;...
+
+// special case when non-alnum is a PHP quoted string escape
+$regex = '/\'/';            // matches '
+$regex = '/\\\'/';          // matches '
+$regex = '/\\\\\'/';        // matches \'
+$regex = '/\\\\\\\'/';      // matches \'
+$regex = '/\\\\\\\\\'/';    // matches \\'
+$regex = '/\\\\\\\\\\\'/';  // matches \\'
+
+$regex = "/\"/";            // matches "
+$regex = "/\\\"/";          // matches "
+$regex = "/\\\\\"/";        // matches \"
+$regex = "/\\\\\\\"/";      // matches \"
+$regex = "/\\\\\\\\\"/";    // matches \\"
+$regex = "/\\\\\\\\\\\"/";  // matches \\"
+
 /*---------------------------------------*
 *  known limitations / unhandled cases:  *
 *----------------------------------------*/
@@ -111,3 +176,4 @@ $r = "/[a-z]{$foo('bar')}[a-z]/";
 
 // combining parts:
 $r = "/[a-z](" . $foo . ")[a-z]/";
+
