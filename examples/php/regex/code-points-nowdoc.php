@@ -1,6 +1,6 @@
 <?php
 // mirrors the single-quoted set; `/u` is not a thing here, these pairs just track the plain and `/u` variants from that file
-
+// comments are incorrect, in nowdoc, backslahes are literal, so they reach pcre2 and, for example, `\\x{4A}` matches literal string `\x{4A}`. To match J we need just `\x{4A}`, and to match `\J` we need `\\\x{4A}`. Gotta correct comments and extend examples.
 $patterns = <<<'REGEX'
       😀                # PCRE sees:   /😀/            VALID            literal UTF-8 bytes from source; matches 😀 bytes even without /u
       😀                # PCRE sees:   /😀/u           VALID            literal UTF-8 bytes plus UTF mode; matches 😀 as U+1F600
