@@ -97,15 +97,25 @@ $supportedBackreferences = <<<'REGEX'
 (?'word'ab)\k'word'
 (?P<word>ab)(?P=word)
 ((foo))(?:bar)\2
+
+\\k'word'
+\\k<word>
 REGEX;
 
 <<<REGEX
+\k<word>
 \k'word'
+\\k'word'
+\\k<word>
 REGEX;
-
-$r = "/\k'word' [a-z]/";
-$r = '/\k\'word\' [a-z]/';
-$r = '/(?\'word\'ab) [a-z]/';
+$r = "/(?<word>ab)\k<word>/";
+$r = "/(?<word>ab)\\k<word>/";
+$r = '/(?<word>ab)\k<word>/';
+$r = '/(?<word>ab)\\k<word>/';
+$r = "/(?'word'ab)\k'word'/";
+$r = "/(?'word'ab)\\k'word'/";
+$r = '/(?\'word\'ab)\k\'word\'/';
+$r = '/(?\'word\'ab)\\k\'word\'/';
 
 // in heredoc, PHP must win for its sequences unless double-escaped
 $r = <<<REGEX
