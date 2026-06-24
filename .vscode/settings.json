@@ -1,0 +1,4 @@
+{
+  "intelephense.diagnostics.enable": false,
+  "powershell.scriptAnalysis.enable": false
+}
